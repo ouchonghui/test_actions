@@ -24,7 +24,7 @@ jobs:
         run: |
           cat README.md
       - run: echo "🍏 This job's status is ${{ job.status }}."
-  构建镜像:
+  docker-build:
     runs-on: ubuntu-latest
     steps:
     - name: List files in the repository
