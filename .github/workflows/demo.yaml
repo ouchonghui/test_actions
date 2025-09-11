@@ -25,6 +25,7 @@ jobs:
           cat README.md
       - run: echo "🍏 This job's status is ${{ job.status }}."
   docker-build:
+    name: 构建镜像
     runs-on: ubuntu-latest
     needs: [Explore-Github-Actions]
     steps:
