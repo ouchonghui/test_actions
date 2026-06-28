@@ -17,7 +17,9 @@ jobs:
       - name: Get latest release of target repo
         id: get_remote_release
         run: |
-          # 获取最新release tag名称
-          LATEST_TAG=$(gh api repos/apache/rocketmq/releases/latest --jq '.tag_name')
+          # 获取apache/rocketmq最新release
+          RAW_TAG=$(gh api repos/apache/rocketmq/releases/latest --jq '.tag_name')
+          LATEST_TAG=$(echo "$RAW_TAG" | sed -E 's/^[^0-9]+//')
+          echo "REMOTE_RAW_TAG=$RAW_TAG" >> $GITHUB_ENV
           echo "REMOTE_LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
-          echo "Latest remote version: $LATEST_TAG"
+          echo "Latest remote tag: $RAW_TAG, Latest remote version: $LATEST_TAG"
