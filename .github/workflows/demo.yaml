@@ -2,7 +2,7 @@ name: Github Actions Demo
 on:
   workflow_dispatch:
   schedule:
-    - cron: '23 21 * * *'
+    - cron: '37 13 * * *'
 env:
   GH_TOKEN: ${{ github.token }}
   
