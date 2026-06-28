@@ -3,37 +3,19 @@ run-name: ${{ github.actor }} is testing out Github Actions 🚀
 on: [push]
 
 jobs:
-  Explore-Github-Actions:
+  check-and-release:
     runs-on: ubuntu-latest
     steps:
-      - name: Display Node.js version
+      - name: Checkout current repo code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 1
+
+      # 1. 查询目标仓库最新Release
+      - name: Get latest release of target repo
+        id: get_remote_release
         run: |
-          node -v
-          npm -v
-      - run: echo "🎉 The job was automatically triggered by a ${{ github.event_name }} event."
-      - run: echo "🐧 This job is now running on a ${{ runner.os }} server hosted by Github!"
-      - run: echo "🔎 The name of your branch is ${{ github.ref }} and your repository is ${{ github.repository }}."
-      - name: Check out repository code
-        uses: actions/checkout@v5
-      - run: echo "💡 The ${{ github.repository }} repository has been cloned to the runner."
-      - run: echo "🖥️ The workflow is now ready to test your code on the runner."
-      - name: List files in the repository
-        run: |
-          ls ${{ github.workspace }}
-      - name: 查看文件内容 README.md
-        run: |
-          cat README.md
-      - run: echo "🍏 This job's status is ${{ job.status }}."
-  docker-build:
-    name: 构建镜像
-    runs-on: ubuntu-latest
-    needs: [Explore-Github-Actions]
-    steps:
-    - name: List files in the repository
-      run: |
-        ls ${{ github.workspace }}
-    - name: List files in the repository 2
-      run: |
-        ls ./
-    - name: env
-      run: env
+          # 获取最新release tag名称
+          LATEST_TAG=$(gh api repos/apache/rocketmq/releases/latest --jq '.tag_name')
+          echo "REMOTE_LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
+          echo "Latest remote version: $LATEST_TAG"
