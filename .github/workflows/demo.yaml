@@ -1,6 +1,8 @@
 name: Github Actions Demo
 run-name: ${{ github.actor }} is testing out Github Actions 🚀
 on: [push]
+env:
+  GH_TOKEN: ${{ github.token }}
 
 jobs:
   check-and-release:
