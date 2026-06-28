@@ -2,6 +2,7 @@ name: Github Actions Demo
 on:
   workflow_dispatch:
   schedule:
+    # 每天 UTC 13:37（北京时间 21:37）检查一次
     - cron: '37 13 * * *'
 env:
   GH_TOKEN: ${{ github.token }}
