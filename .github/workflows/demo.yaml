@@ -1,9 +1,11 @@
 name: Github Actions Demo
 on:
-  workflow_dispatch:
   schedule:
-    # 每天 UTC 13:37（北京时间 21:37）检查一次
-    - cron: '37 13 * * *'
+    # 每天 UTC 13:37（北京时间 8:00）执行一次
+    - cron: '0 0 * * *'
+  # 支持手动触发
+  workflow_dispatch:
+ 
 env:
   GH_TOKEN: ${{ github.token }}
   
