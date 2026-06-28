@@ -1,5 +1,8 @@
 name: Github Actions Demo
-on: [push]
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '23 21 * * *'
 env:
   GH_TOKEN: ${{ github.token }}
   
@@ -29,7 +32,7 @@ jobs:
         id: read_last
         run: |
           # 获取apache/rocketmq最新release
-          LATEST_TAG=$(gh api repos/ouchonghui/rocketmq-docker/releases/latest --jq '.tag_name')
+          LATEST_TAG=$(gh api repos/ouchonghui/test_actions/releases/latest --jq '.tag_name')
           echo "SELF_LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
           echo "Latest self tag: $LATEST_TAG"
 
@@ -38,15 +41,14 @@ jobs:
         if: env.REMOTE_LATEST_TAG == env.SELF_LATEST_TAG
         run: |
           echo "版本未更新，当前最新版本 rocketmq-all-${{ env.REMOTE_LATEST_TAG }} 与本地记录一致，无需发布，退出流程"
-          exit 0
 
-      # 3. 版本有更新
+      # 4. 版本有更新
       - name: Compare version & build if new
         if: env.REMOTE_LATEST_TAG != env.SELF_LATEST_TAG
         run: |
           echo "发现新版本 ${{ env.REMOTE_LATEST_TAG }}，开始构建打包"
 
-      # 4. 自动创建Release发布
+      # 5. 自动创建Release发布
       - name: Create new release in current repo
         if: env.REMOTE_LATEST_TAG != env.SELF_LATEST_TAG
         run: |
