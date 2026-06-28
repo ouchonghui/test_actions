@@ -1,5 +1,4 @@
 name: Github Actions Demo
-run-name: ${{ github.actor }} is testing out Github Actions 🚀
 on: [push]
 env:
   GH_TOKEN: ${{ github.token }}
@@ -22,4 +21,13 @@ jobs:
           LATEST_TAG=$(echo "$RAW_TAG" | sed -E 's/^[^0-9]+//')
           echo "REMOTE_RAW_TAG=$RAW_TAG" >> $GITHUB_ENV
           echo "REMOTE_LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
-          echo "Latest remote tag: $RAW_TAG, Latest remote version: $LATEST_TAG"
+          echo "Latest remote: tag: $RAW_TAG, version: $LATEST_TAG"
+
+      # 2. 查询本仓库最新Release
+      - name: Read self laste version
+        id: read_last
+        run: |
+          # 获取apache/rocketmq最新release
+          LATEST_TAG=$(gh api repos/ouchonghui/rocketmq-docker/releases/latest --jq '.tag_name')
+          echo "SELF_LATEST_TAG=$LATEST_TAG" >> $GITHUB_ENV
+          echo "Latest self tag: $LATEST_TAG"
