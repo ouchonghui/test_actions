@@ -1,4 +1,5 @@
 name: Github Actions Demo
+run-name: 检查最新版本并发布 · ${{ github.ref_name }}
 on:
   schedule:
     # 每天 UTC 13:37（北京时间 8:00）执行一次
