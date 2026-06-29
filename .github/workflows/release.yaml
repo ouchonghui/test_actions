@@ -2,6 +2,7 @@ name: "release"
 run-name: release-[${{ github.ref_name }}]
 
 on:
+  workflow_dispatch:
   push:
     tags:
       - '[0-9]+.[0-9]+.[0-9]+*'    
@@ -19,3 +20,6 @@ jobs:
       - name: 输出版本号
         run: |
           echo "${{ github.ref_name }}"
+          apt-get update
+          apt-get install -y bash wget vim unzip tar curl tzdata openjdk-17-jdk gzip 
+          npm -v
