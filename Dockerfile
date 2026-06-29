@@ -1,4 +1,4 @@
-FROM alpine:3.19 AS ROCKETMQ_DASHBOARD_BUILD
+FROM ubuntu:latest AS ROCKETMQ_DASHBOARD_BUILD
 
 LABEL maintainer="chongh.ou <ochhgz@163.com>"
 
@@ -7,15 +7,13 @@ ENV MAVEN_HOME="/home/maven/apache-maven-3.8.6"
 ARG ROCKETMQ_DASHBOARD_VERSION=1.0.0
 
 RUN set -x \
-    && apk add --no-cache openjdk17 curl gcompat libstdc++ nodejs npm  \
+    && apt-get update \
+    && apt-get install -y bash wget vim unzip tar curl tzdata openjdk-17-jdk gzip \
     && mkdir -p /home/console/rocketmq-dashboard && mkdir -p /home/maven \
     && curl -SL https://archive.apache.org/dist/rocketmq/rocketmq-dashboard/${ROCKETMQ_DASHBOARD_VERSION}/rocketmq-dashboard-${ROCKETMQ_DASHBOARD_VERSION}-source-release.zip -o /home/console/rocketmq-dashboard.zip \
     && unzip /home/console/rocketmq-dashboard.zip -d /home/console/rocketmq-dashboard/tmp_unzip/ \
-    && TOP_DIR=$(ls /home/console/rocketmq-dashboard/tmp_unzip) && mv "/home/console/rocketmq-dashboard/tmp_unzip/$TOP_DIR"/* /home/console/rocketmq-dashboard/
-
-COPY ./asset/console/pom.xml /home/console/rocketmq-dashboard/
-
-RUN curl -SL https://archive.apache.org/dist/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.zip -o /home/maven/maven.zip \
+    && TOP_DIR=$(ls /home/console/rocketmq-dashboard/tmp_unzip) && mv "/home/console/rocketmq-dashboard/tmp_unzip/$TOP_DIR"/* /home/console/rocketmq-dashboard/ \
+    && curl -SL https://archive.apache.org/dist/maven/maven-3/3.8.6/binaries/apache-maven-3.8.6-bin.zip -o /home/maven/maven.zip \
     && unzip /home/maven/maven.zip -d /home/maven/ \
     && export PATH=$PATH:$MAVEN_HOME/bin \
     && cd /home/console/rocketmq-dashboard \
