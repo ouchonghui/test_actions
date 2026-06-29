@@ -7,7 +7,7 @@ ENV MAVEN_HOME="/home/maven/apache-maven-3.8.6"
 ARG ROCKETMQ_DASHBOARD_VERSION=1.0.0
 
 RUN set -x \
-    && apk add --no-cache openjdk17 curl gcompat libstdc++  \
+    && apk add --no-cache openjdk17 curl gcompat libstdc++ nodejs npm  \
     && mkdir -p /home/console/rocketmq-dashboard && mkdir -p /home/maven \
     && curl -SL https://archive.apache.org/dist/rocketmq/rocketmq-dashboard/${ROCKETMQ_DASHBOARD_VERSION}/rocketmq-dashboard-${ROCKETMQ_DASHBOARD_VERSION}-source-release.zip -o /home/console/rocketmq-dashboard.zip \
     && unzip /home/console/rocketmq-dashboard.zip -d /home/console/rocketmq-dashboard/tmp_unzip/ \
@@ -51,10 +51,11 @@ COPY --from=ROCKETMQ_DASHBOARD_BUILD /home/console/rocketmq-dashboard.jar ${CONS
 COPY ["./asset", "/tmp/asset/"]
 
 RUN set -x \
-    && apk add --no-cache openjdk17 curl bash \
+    && apk add --no-cache openjdk17 curl bash tzdata \
+    && cp /usr/share/zoneinfo/$TIME_ZONE /etc/localtime && echo $TIME_ZONE > /etc/timezone \
     # 下载rocketmq压缩包
     && curl -SL https://archive.apache.org/dist/rocketmq/${ROCKETMQ_VERSION}/rocketmq-all-${ROCKETMQ_VERSION}-bin-release.zip -o /tmp/rocketmq.zip \
-    && apk del curl \
+    && apk del curl tzdata \
     && unzip /tmp/rocketmq.zip -d ${BASE_DIR}/ \
     && mv ${BASE_DIR}/rocketmq-all-${ROCKETMQ_VERSION}-bin-release ${BASE_DIR}/rocketmq \
     && ln -snf /usr/share/zoneinfo/$TIME_ZONE /etc/localtime && echo $TIME_ZONE > /etc/timezone \
